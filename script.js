@@ -11,21 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleScroll = () => {
         const scrollY = window.scrollY;
 
-        // Navbar background
         if (scrollY > 60) {
             navbar.classList.add('scrolled');
         } else {
             navbar.classList.remove('scrolled');
         }
 
-        // Back to top button
         if (scrollY > 500) {
             backToTop.classList.add('visible');
         } else {
             backToTop.classList.remove('visible');
         }
 
-        // Active nav link based on section
         updateActiveNavLink();
     };
 
@@ -69,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = navLinksContainer.classList.contains('open') ? 'hidden' : '';
     });
 
-    // Close mobile nav on link click
     navLinksContainer.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             hamburger.classList.remove('active');
@@ -78,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Close mobile nav on outside click
     document.addEventListener('click', (e) => {
         if (!navLinksContainer.contains(e.target) && !hamburger.contains(e.target)) {
             hamburger.classList.remove('active');
@@ -87,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ── Scroll animations (Intersection Observer) ──
+    // ── Scroll animations ──
     const animatedElements = document.querySelectorAll('[data-animate]');
 
     const observerOptions = {
@@ -116,11 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Contact form ──
     const contactForm = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
+    
+// ✅ EmailJS INIT (NEW)
+    (function () {
+        emailjs.init("UTMTsDNndrjzuuMdl");
+    })();
 
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        // Button loading state
         const originalHTML = submitBtn.innerHTML;
         submitBtn.innerHTML = `
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
@@ -131,8 +130,13 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = true;
         submitBtn.style.opacity = '0.7';
 
-        // Simulate sending
-        setTimeout(() => {
+        // ✅ REAL EMAIL SEND (REPLACED PART)
+       emailjs.send("portfolio_service", "template_2723bca", {
+    user_name: document.getElementById("name").value,
+    user_email: document.getElementById("email").value,
+    message: document.getElementById("message").value
+})
+        .then(() => {
             submitBtn.innerHTML = `
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="20 6 9 17 4 12"/>
@@ -143,7 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.style.background = '#16a34a';
             submitBtn.style.borderColor = '#16a34a';
 
-            // Reset form
             contactForm.reset();
 
             setTimeout(() => {
@@ -152,10 +155,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.style.background = '';
                 submitBtn.style.borderColor = '';
             }, 2500);
-        }, 1500);
-    });
+        })
+        // .catch((error) => {
+        //     console.log(error);
 
-    // ── Smooth anchor scrolling ──
+        //     submitBtn.innerHTML = "Failed ❌";
+        //     submitBtn.style.background = 'red';
+
+        //     setTimeout(() => {
+        //         submitBtn.innerHTML = originalHTML;
+        //         submitBtn.disabled = false;
+        //         submitBtn.style.background = '';
+        //     }, 2000);
+        // });
+    });
+    // ── Smooth scroll ──
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const target = document.querySelector(this.getAttribute('href'));
@@ -166,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Parallax on hero image ──
+    // ── Parallax ──
     const heroImg = document.querySelector('.hero-profile-wrapper');
     if (heroImg && window.innerWidth > 768) {
         window.addEventListener('mousemove', (e) => {
@@ -176,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Add spin keyframe dynamically for loading button
     const style = document.createElement('style');
     style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
     document.head.appendChild(style);

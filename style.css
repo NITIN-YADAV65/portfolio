@@ -1162,7 +1162,10 @@ a.contact-value:hover {
     }
 
     .contact-form-wrapper {
-        padding: 28px;
+        overflow: visible;
+    }
+    .contact-form{
+        
     }
 
     .section-title {
